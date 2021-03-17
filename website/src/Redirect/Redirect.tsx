@@ -27,7 +27,7 @@ function FetchUserToken(){
         },
         body: new URLSearchParams({
           "client_id": "817438308823990312",
-          "client_secret": "nkronk-pu9HB8VzF3JDW6_y1BcjODMnl",
+          "client_secret": "",
           "grant_type": 'authorization_code',
           "code": code,
           "redirect_uri": "http://172.17.89.177:3000/redirect",
