@@ -1,10 +1,5 @@
 package mekura.api.DTO;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 public class UserDTO {
     private long id;
     public String username;

@@ -28,7 +28,7 @@ import mekura.api.DTO.UserDTO;
 
 @CrossOrigin(origins = "http://localhost:3000/")
 @RestController
-@RequestMapping(value="/api/v1/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -46,20 +46,30 @@ public class UserController {
     @PostMapping
     public UserDTO createUser(@RequestBody String user) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode actualObj = mapper.readTree(user);
-        System.out.println("chibrax2000\n\n"+actualObj.toString());
-        System.out.println("chibrax\n\n"+actualObj.at("/user/username"));
-        System.out.println(actualObj.get("user").get("profilePic").toString());
-        System.out.println(actualObj.get("user").get("token").toString());
-        UserDTO userDTO = new UserDTO(actualObj.get("username").toString(),actualObj.get("profilePic").toString(),actualObj.get("token").toString());
-        System.out.println("TAMERLAPUTE\n"+actualObj.toString());
+        JsonNode userObj = mapper.readTree(user);
+        JsonNode userInfo = mapper.readTree(userObj.at("/user").asText());
+
+        UserDTO userDTO = new UserDTO(userInfo.get("username").toString(),userInfo.get("profilePic").toString(),userInfo.get("token").toString());
+
         return userService.save(userDTO);
     }
 
     // get user by id rest api
+    @PostMapping("/search")
+    public ResponseEntity < UserDTO > getUserByName(@RequestBody String username) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode usernameObj = mapper.readTree(username);
+        UserDTO user = userService.findByUsername(usernameObj.at("/username").toString());
+        if (user == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity < UserDTO > getUserById(@PathVariable Long id) throws Exception {
         UserDTO user = userService.findById(id);
+        if (user == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(user);
     }
 

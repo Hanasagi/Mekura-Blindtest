@@ -17,15 +17,12 @@ public class User {
     private long id;
 
     @Column
-    @JsonProperty
     public String username;
 
     @Column
-    @JsonProperty
     public String profilePic;
 
     @Column
-    @JsonProperty
     public String token;
 
     public User(){}

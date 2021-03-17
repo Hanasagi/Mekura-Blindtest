@@ -7,12 +7,16 @@ class UserService {
                 return axios.get(EMPLOYEE_API_BASE_URL);
         }
 
-        createUser(user: string) {
-                return axios.post (EMPLOYEE_API_BASE_URL, {headers:{ "Content-Type": "application/x-www-form-urlencoded" }, user})
+        createUser(user: any) {
+                return axios.post<string>(EMPLOYEE_API_BASE_URL, {headers:{ "Content-Type": "application/x-www-form-urlencoded" }, user});
         }
 
-        getUserById(userId:any){
-                return axios.get(EMPLOYEE_API_BASE_URL + '/' + userId);
+        getUserByName(username:string){
+                return axios.post<string>(EMPLOYEE_API_BASE_URL + '/search',{headers:{ "Content-Type": "application/x-www-form-urlencoded"},username});
+        }
+
+        getUserById(userId:number){
+                return axios.get<number>(EMPLOYEE_API_BASE_URL + '/' + userId,{headers:{ "Content-Type": "application/x-www-form-urlencoded" }});
         }
 
         updateUser(user:any, userId:any){
