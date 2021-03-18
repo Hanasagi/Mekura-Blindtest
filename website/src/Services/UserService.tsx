@@ -23,8 +23,8 @@ class UserService {
                 return axios.put(EMPLOYEE_API_BASE_URL + '/' + userId, user);
         }
 
-        deleteUser(userId:any){
-                return axios.delete(EMPLOYEE_API_BASE_URL + '/' + userId);
+        deleteUser(userId:number){
+                return axios.delete<number>(EMPLOYEE_API_BASE_URL + '/' + userId);
         }
 }
 

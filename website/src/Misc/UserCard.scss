@@ -1,0 +1,25 @@
+@mixin fontSize($size){
+	font-size:$size;
+}
+
+.userCard{
+	background-color: #444954;
+    width: 12vw;
+    display: flex;
+    top: 1vw;
+    right: 1vw;
+    position: fixed;
+}
+
+.profilePic{
+	width: 64px;
+    height: auto;
+}
+
+.username{
+	@include fontSize(20px);
+}
+
+.logout{
+	@include fontSize(15px);
+}

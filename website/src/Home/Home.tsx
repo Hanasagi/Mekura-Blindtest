@@ -1,6 +1,6 @@
-import React,{useEffect, Component} from 'react';
+import React,{Component} from 'react';
 import './Home.css';
-import UserCard from "../Misc/UserCard";
+import HomeLoggedIn from "./HomeLoggedIn"
 import UserService from '../Services/UserService'
 
 interface State {
@@ -11,16 +11,28 @@ class Home extends Component {
 
    state: Readonly<State> = {isLoaded: false };
 
-  componentWillMount() {
+  componentDidMount() {
     let username = localStorage.getItem("user")!
-  
-    let userJSON = JSON.parse(username)
-    let i = UserService.getUserByName(userJSON.username).then((r)=>{
-      if(r!=null){
-        UserCard.getUserInfo(r)
-        this.setState({isLoaded: true })
-      }
-    });
+    if(username!=null){
+      let userJSON = JSON.parse(username)
+
+      UserService.getUserByName(userJSON.user[0].username).then((r: any)=>{
+        if(r!=null){
+          let t = JSON.parse(r.data.token)
+          let u =
+          `{"user":
+            [{
+              "username":${r.data.username},
+              "profilePic":${r.data.profilePic},
+              "token":"${t.access_token}",
+              "id":"${r.data.id}"
+            }]
+          }`
+          localStorage.setItem("user",u)
+          this.setState({isLoaded: true })
+        }
+      });
+    }
   }
 
   render() {
@@ -37,12 +49,7 @@ class Home extends Component {
     </div>
       ) 
     } else {
-      return (
-        <div>
-          <UserCard/>
-          Logged in
-        </div>
-      )
+      return (<HomeLoggedIn/>)
     }
   }
 }

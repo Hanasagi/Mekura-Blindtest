@@ -40,7 +40,7 @@ function FetchUserToken(){
       }).then(response=>{
         return response.json();
        }).then(response=>{
-        fetchUserInfo(response)
+        FetchUserInfo(response)
       });
     };
       fetchToken()
@@ -48,7 +48,7 @@ function FetchUserToken(){
   return "";
 }
 
-async function fetchUserInfo(token:any){
+async function FetchUserInfo(token:any){
       axios.get(
           `https://discordapp.com/api/users/@me`,
           {headers: {Authorization: `Bearer ${token.access_token}`}}
@@ -57,7 +57,9 @@ async function fetchUserInfo(token:any){
         }).then(r=>{
           let user={"username":r.data.username,"profilePic":`https://cdn.discordapp.com/avatars/${r.data.id}/${r.data.avatar}.png?size=256`,"token":token}
           UserService.createUser(JSON.stringify(user))
-          localStorage.setItem("user",`{"user":"${r.data.username}","token":${token.access_token}}`)
+          localStorage.setItem("user",`{"user":[{"username":"${r.data.username}","token":"${token.access_token}"}]}`)
+        }).then(r=>{
+           window.location.href = "/"
         })
 }
 
