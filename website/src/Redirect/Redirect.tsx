@@ -1,6 +1,7 @@
 import React,{useEffect} from 'react';
 import './Redirect.css';
 import UserService from '../Services/UserService'
+import MiscService from '../Services/MiscService'
 import axios from 'axios'
 
 function Redirect() {
@@ -19,6 +20,9 @@ function FetchUserToken(){
   useEffect(() => {
     async function fetchToken(){
       let code = readGrantCode();
+      let secret= await fetchSecret()
+      secret = secret.replaceAll('\"','')
+
       let options = {
         url: 'https://discord.com/api/oauth2/token',
         method: 'POST',
@@ -27,7 +31,7 @@ function FetchUserToken(){
         },
         body: new URLSearchParams({
           "client_id": "817438308823990312",
-          "client_secret": "",
+          "client_secret": secret,
           "grant_type": 'authorization_code',
           "code": code,
           "redirect_uri": "http://172.17.89.177:3000/redirect",
@@ -41,11 +45,18 @@ function FetchUserToken(){
         return response.json();
        }).then(response=>{
         FetchUserInfo(response)
-      });
+      }).catch((error)=>console.error(error));
     };
       fetchToken()
   },[])
   return "";
+}
+
+function fetchSecret(){
+  let secret = MiscService.getByName("sc").catch((error)=>console.error(error));
+      return secret.then((r:any)=>{
+        return r.data.value;
+      })
 }
 
 async function FetchUserInfo(token:any){

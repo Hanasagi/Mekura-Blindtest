@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import './Home.css';
 import HomeLoggedIn from "./HomeLoggedIn"
 import UserService from '../Services/UserService'
+import axios from 'axios'
 
 interface State {
   isLoaded: any;
