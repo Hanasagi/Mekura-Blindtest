@@ -34,16 +34,10 @@ public class MiscController {
     // create user rest api
     @PostMapping
     public MiscDTO createEntry(@RequestBody String entry) throws JsonProcessingException {
-        System.out.println(entry);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode entryrObj = mapper.readTree(entry);
-        System.out.println(entryrObj);
         JsonNode entryInfo = mapper.readTree(entryrObj.at("/misc").asText());
-        System.out.println(entryInfo.get("name"));
-        System.out.println(entryrObj.at("/misc/name"));
-        System.out.println(entryrObj.at("/misc/value"));
         MiscDTO entryDTO = new MiscDTO(entryrObj.at("/misc").get("name").toString(),entryrObj.at("/misc").get("value").toString());
-        System.out.println(entryDTO.toString());
         return miscService.save(entryDTO);
     }
 
@@ -54,11 +48,7 @@ public class MiscController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode nameObj = mapper.readTree(name);
         String n = nameObj.at("/name").toString();
-        System.out.println(n);
         MiscDTO misc = miscService.findMiscByName(n);
-        System.out.println(misc);
-        if (misc == null)
-            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(misc);
     }
 

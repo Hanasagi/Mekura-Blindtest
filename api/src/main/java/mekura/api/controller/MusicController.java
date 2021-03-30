@@ -7,10 +7,12 @@ import mekura.api.DTO.MusicDTO;
 import mekura.api.model.Music;
 import mekura.api.repository.MusicRepository;
 import mekura.api.service.MusicService;
+import org.hibernate.annotations.SQLInsert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +36,10 @@ public class MusicController {
     // create user rest api
     @PostMapping
     public MusicDTO createEntry(@RequestBody String entry) throws JsonProcessingException {
-        System.out.println(entry);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode entryrObj = mapper.readTree(entry);
-        System.out.println(entryrObj);
         JsonNode entryInfo = mapper.readTree(entryrObj.at("/entry").toString());
         MusicDTO entryDTO = new MusicDTO(entryInfo.get("source").toString(),entryInfo.get("link").toString(),entryInfo.get("type").toString(),entryInfo.get("uid").toString());
-        System.out.println(entryDTO.toString());
         return musicService.save(entryDTO);
     }
 

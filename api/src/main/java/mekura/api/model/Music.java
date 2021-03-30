@@ -1,9 +1,12 @@
 package mekura.api.model;
 
+import org.hibernate.annotations.SQLInsert;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="music")
+@SQLInsert(sql = "INSERT IGNORE INTO music(source, link, type, uid) VALUES (?, ?, ?, ?)" )
 public class Music {
 
     @Id

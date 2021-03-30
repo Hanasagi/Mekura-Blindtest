@@ -13,7 +13,7 @@ class UserCard extends Component {
   render() {
       return(
         <div className="userCard">
-          <img className="profilePic" src={this.getProfilePicture()}></img>
+          <img alt="profilePic" className="profilePic" src={this.getProfilePicture()}></img>
           <p className="username">{this.getUsername()}</p>
           <button type="button" onClick={() => this.handleLogout()}>Log out</button>
         </div>

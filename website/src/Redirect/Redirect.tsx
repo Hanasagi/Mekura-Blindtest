@@ -21,7 +21,7 @@ function FetchUserToken(){
     async function fetchToken(){
       let code = readGrantCode();
       let secret= await fetchSecret()
-      secret = secret.replaceAll('\"','')
+      secret = secret.replaceAll('"','')
 
       let options = {
         url: 'https://discord.com/api/oauth2/token',

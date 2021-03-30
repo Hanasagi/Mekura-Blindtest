@@ -25,6 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
         for(int i=0;i<=9;i++){
             origins.add("http://localhost:300"+i);
             origins.add("http://172.17.89.177:300"+i);
+            origins.add("http://172.17.89.177:400"+i);
         }
 
         for(String url:serverUrls){

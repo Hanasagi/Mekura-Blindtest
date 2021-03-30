@@ -5,10 +5,9 @@ import mekura.api.converter.MusicConverter;
 import mekura.api.model.Music;
 import mekura.api.repository.MusicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 public class MusicService {
@@ -25,11 +24,7 @@ public class MusicService {
 
     public MusicDTO save(MusicDTO entryDTO){
         Music entry = musicConverter.convertTo(entryDTO,Music.class);
-        try {
-            musicRepository.save(entry);
-        }catch(Exception e){
-
-        }
+        musicRepository.save(entry);
         return entryDTO;
     }
 

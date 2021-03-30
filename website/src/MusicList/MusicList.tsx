@@ -28,8 +28,7 @@ function MusicList() {
 async function handleClick(){
 	let entry = await fetch()
 	for(let i=0;i<entry.data.length;i++){
-		if(i%1000===0) delay(3000)
-		console.log(entry.data[i])
+		if(i%500===0) delay(1000)
 		let type=entry.data[i].uid.match(/^[A-Za-z]{6,8}/g)![0]
 		let link="https://openings.moe/?video="+entry.data[i].uid
 		MusicService.createEntry({"source":entry.data[i].source,"link":link,"type":type,"uid":entry.data[i].uid})
