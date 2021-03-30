@@ -20,45 +20,51 @@ app.get("/game", (req, res) => {
 
 const port = process.env.PORT || 4001;
 
-let users=[]
-let rooms=[]
+let rooms=new Map()
 
 io.on("connection",socket=>{
-    socket.on("join server",(username,profilePic)=>{
+    socket.on("join server",(room,username,profilePic)=>{
         const user={
             username,
             profilePic,
             id: socket.id,
         };
-        users.push(user);
-        io.emit("new user",users);
+        rooms.get(room).push(user);
+        updateUsersList(room)
     })
 
     socket.on("join room",(roomName)=>{
         socket.join(roomName);
-        if (typeof rooms[roomName] === "undefined")
-            rooms[roomName] = {};
-        io.sockets.in(roomName).emit('message', 'what is going on, party people?');
+        if (!rooms.has(roomName)) {
+            rooms.set(roomName, []);
+        }
+        console.log(rooms)
+        updateUsersList(roomName)
     });
-    socket.on("new user",()=>{
-        console.log(users)
-    })
-    socket.on("list room",()=>{
-        console.log(socket.rooms)
+
+    socket.on("leave",(room)=>{
+        socket.leave(room)
+        let userList = rooms.get(room)
+        userList.filter(u=>u.id!==socket.id);
+        updateUsersList(room)
+        if (!userList.length) {
+            rooms.delete(room);
+            socket.disconnect(true);
+            console.log("destroyed")
+        }
         console.log(rooms)
     })
-
-    socket.on("list user",()=>{
-        console.log(users)
-    })
-    socket.on("disconnect",()=>{
-        users= users.filter(u=>u.id!==socket.id);
-        io.emit("new user",users);
-    })
-
-    socket.on('message', function(data) {
-        console.log('Incoming message:', data);
+    socket.on('disconnect', function () {
+        io.sockets.emit('room disconnected');
     });
+
+    function updateUsersList(room){
+        socket.to(room).emit('list users', {
+            users: rooms.get(room)
+        });
+    }
+
 });
+
 
 http.listen(port,()=> console.log('server running on port '+port));

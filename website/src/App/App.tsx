@@ -5,7 +5,6 @@ import Redirect from '../Redirect/Redirect';
 import MusicList from '../MusicList/MusicList'
 import Test from '../MusicList/Test'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import HomeLoggedIn from "../Home/HomeLoggedIn";
 
 function App() {
   return (

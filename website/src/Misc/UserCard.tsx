@@ -2,6 +2,8 @@ import React,{Component} from 'react';
 import './UserCard.scss';
 import UserService from '../Services/UserService'
 
+
+
 class UserCard extends Component {
   private obj: any;
   constructor(props:any){

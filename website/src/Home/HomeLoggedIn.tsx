@@ -13,7 +13,10 @@ socket.on("error", (err) => {
 socket.on("connect", function () {
     console.log("connected");
 });
-console.log(socket.connected)
+
+socket.on("list room",(room)=>{
+    console.log(room)
+})
 
 const initialFormData = Object.freeze({
     room: "",
@@ -48,11 +51,8 @@ export default function HomeLoggedIn() {
     }
     let createRoom = (e: any) => {
         e.preventDefault()
-        let user = JSON.parse(localStorage.getItem("user")!)
-        socket.emit("join server",user.user[0].username, user.user[0].profilePic)
         socket.emit("join room",window.location.origin+"/game#"+formData.room)
-        socket.emit("list room")
-        console.log()
+
        // window.location.href=window.location.origin+"/game#"+formData.room
     }
     return (
