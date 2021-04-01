@@ -1,28 +1,13 @@
 import React from 'react';
 import './App.css';
-import Home from '../Home/Home';
-import Redirect from '../Redirect/Redirect';
-import MusicList from '../MusicList/MusicList'
-import Test from '../MusicList/Test'
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useRoutes } from "hookrouter";
+import routes from "../routes";
+import NoPageFound from "../NoPageFound/NoPageFound";
 
 function App() {
+    const routeResult = useRoutes(routes);
   return (
-        <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={Home}>
-          </Route>
-          <Route path="/redirect">
-            <Redirect />
-          </Route>
-            <Route path="/game">
-                <Test/>
-            </Route>
-          <Route path="/list">
-            <MusicList/>
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <div>{routeResult || <NoPageFound />}</div>
   );
 }
 

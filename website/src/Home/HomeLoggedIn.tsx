@@ -1,33 +1,28 @@
-import React, {Component, useState, useRef} from 'react';
-import {io} from "socket.io-client";
+import React, {useState, useEffect} from 'react';
 import './Home.css';
 import UserCard from "../Misc/UserCard";
 
-const socket = io(window.location.hostname+":4001", {transports: ['websocket'], reconnection: true, rejectUnauthorized: false })
-localStorage.debug = '*';
-
-socket.on("error", (err) => {
-    console.log(`${err.message}`);
-});
-
-socket.on("connect", function () {
-    console.log("connected");
-});
-
-socket.on("list room",(room)=>{
-    console.log(room)
-})
-
-const initialFormData = Object.freeze({
-    room: "",
-});
-
-
 export default function HomeLoggedIn() {
-    const [username, setUsername] = useState("");
-    const [allUsers, setAllUsers] = useState([]);
-    const [allRoom] = useState<string[]>([]);
-    const [formData, updateFormData] = React.useState(initialFormData);
+
+    useEffect(() => {
+        const connectSocket=async()=>{
+            let rooms = localStorage.getItem("room")!
+            if(rooms!==null){
+                rooms=JSON.parse(rooms)
+                for(let i =0;i<rooms.length;i++){
+                    setRooms(rooms[i])
+                }
+            }
+        }
+        connectSocket()
+    },[])
+
+    const initialFormData = Object.freeze({
+        room: "",
+    });
+    const rooms:string[]= [];
+    const [roomList,setRoomList]= useState(rooms)
+    const [formData, updateFormData] = useState(initialFormData);
     const handleChange = (e: any) => {
         updateFormData({
             ...formData,
@@ -40,25 +35,21 @@ export default function HomeLoggedIn() {
         let roomdiv = document.getElementById("roomlist")
         let subdiv = document.createElement("div")
         let a = document.createElement("a")
-        a.href = roomName;
+        a.href = window.location.origin+"/game#"+formData.room;
         a.innerText = roomName;
-
         subdiv.append(a)
-        allRoom.push(roomName)
-        // @ts-ignore
-        roomdiv.append(subdiv)
-        console.log(allRoom)
+        roomdiv!.append(subdiv)
+        setRoomList([...roomList,roomName])
     }
     let createRoom = (e: any) => {
         e.preventDefault()
-        socket.emit("join room",window.location.origin+"/game#"+formData.room)
-
-       // window.location.href=window.location.origin+"/game#"+formData.room
+        setRooms(formData.room)
+        window.location.href=window.location.origin+"/game#"+formData.room
     }
     return (
         <div>
             <UserCard/>
-            <form onSubmit={createRoom}><input onChange={handleChange} type="text" name="room"></input>
+            <form onSubmit={createRoom}><input onChange={handleChange} type="text" name="room"/>
                 <button type="submit">Submit</button>
             </form>
             <div id="roomlist">Room List
