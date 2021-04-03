@@ -1,0 +1,40 @@
+.Test {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+div[class*="P"]{
+  background:blue;
+}
+.P1 {
+  grid-column: 1;
+}
+.P2 {
+  grid-column: 2
+
+}
+.P3 {
+  grid-column: 3;
+
+}
+.P4 {
+  grid-column: 4;
+
+}
+.P5 {
+  grid-column: 5;
+
+}
+.P6 {
+  grid-column: 6;
+
+}
+.Pè {
+  grid-column: 7;
+
+}
+.P8 {
+  grid-column: 8;
+
+}

@@ -31,12 +31,14 @@ io.on("connection",socket=>{
     })
 
     socket.on('disconnecting', () =>{
-        io.sockets.emit('user disconnected');
         for (let key of rooms.keys()) {
             for(let value in rooms.get(key)){
                 if(rooms.get(key)[value].id===socket.id){
+                    console.log(key)
+                    io.sockets.to(key).emit('user disconnected');
+                    removeUser(key,rooms.get(key)[value])
                     rooms.get(key).splice(value,1)
-                    updateUsersList(rooms.get(key))
+
                     if (!rooms.get(key).length) {
                         rooms.delete(key);
                         socket.disconnect(true);
@@ -61,6 +63,12 @@ io.on("connection",socket=>{
     function updateUsersList(room){
         io.sockets.to(room).emit('list users', {
             users: rooms.get(room)
+        });
+    }
+
+    function removeUser(room,user){
+        io.sockets.to(room).emit('remove user', {
+            user: user
         });
     }
 
