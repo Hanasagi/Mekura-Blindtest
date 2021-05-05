@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class MusicService {
@@ -19,6 +21,11 @@ public class MusicService {
 
     public MusicDTO findById(Long id) throws Exception {
         Music entry = musicRepository.findById(id).orElseThrow(Exception::new);
+        return musicConverter.convertFrom(entry, MusicDTO.class);
+    }
+
+    public List<MusicDTO> findByTypeRandom(String type){
+        List<Music> entry = musicRepository.getRandomByType(type);
         return musicConverter.convertFrom(entry, MusicDTO.class);
     }
 

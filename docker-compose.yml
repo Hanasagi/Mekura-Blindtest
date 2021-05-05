@@ -1,0 +1,57 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3.3'
+# Define services
+services:
+  db:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: mekura_
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: root
+      MYSQL_PASSWORD: null
+      MYSQL_ROOT_PASSWORD: null
+
+    volumes: # volumes could help in case we lost stored data (it persist data in host machine in the db-data directory)
+      - db-data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8086:80
+    environment:
+      - PMA_ARBITRARY=1
+  # App backend service
+  server:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: api # Use an image built from the specified dockerfile in the `app-server` directory.
+      dockerfile: "./Dockerfile" # Specify the Dockerfile path
+    ports:
+      - "8090:8090" # Forward the exposed port 8080 on the container (docker) to port 8080 on the host machine
+    restart: always
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 
+  # Frontend Service
+  client:
+    build:
+      context: website # Use an image built from the specified dockerfile in the `app-client` directory.
+      dockerfile: "./Dockerfile" # Specify the Dockerfile path
+    ports:
+      - "80:80" # Map the exposed port 80 on the container to port 80 on the host machine
+    restart: always
+    depends_on:
+      - server
+
+  # Database Service (Mysql)
+# Define Volumes to be created
+volumes:
+  db-data:
+# Define Networks to be created to facilitate communication between containers

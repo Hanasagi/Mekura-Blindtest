@@ -5,24 +5,24 @@ import org.hibernate.annotations.SQLInsert;
 import javax.persistence.*;
 
 @Entity
-@Table(name="music")
-@SQLInsert(sql = "INSERT IGNORE INTO music(source, link, type, uid) VALUES (?, ?, ?, ?)" )
+@Table(name="music")                       //SOURCE//LINK
+@SQLInsert(sql = "INSERT IGNORE INTO music(link, source, type, uid) VALUES (?, ?, ?, ?)" )
 public class Music {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(name="source")
     private String source;
 
-    @Column
+    @Column(name="link")
     private String link;
 
-    @Column
+    @Column(name="type")
     private String type;
 
-    @Column
+    @Column(name="uid")
     private String uid;
 
     public Music(){}
@@ -71,5 +71,16 @@ public class Music {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    @Override
+    public String toString() {
+        return "Music{" +
+                "id=" + id +
+                ", source='" + source + '\'' +
+                ", link='" + link + '\'' +
+                ", type='" + type + '\'' +
+                ", uid='" + uid + '\'' +
+                '}';
     }
 }

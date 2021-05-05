@@ -44,7 +44,6 @@ public class MiscController {
     // get user by id rest api
     @PostMapping("/search")
     public ResponseEntity< MiscDTO > getMiscByName(@RequestBody String name) throws IllegalArgumentException,Exception {
-        System.out.println(name);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode nameObj = mapper.readTree(name);
         String n = nameObj.at("/name").toString();

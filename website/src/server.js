@@ -1,3 +1,4 @@
+
 const app = require('express')();
 const http = require('http').createServer(app);
 const socketIO = require('socket.io');
@@ -13,6 +14,7 @@ let io = socketIO(http,{
 const port = process.env.PORT || 4001;
 
 let rooms=new Map()
+let games= new Map()
 
 io.on("connection",socket=>{
     socket.on("join room",(room,username,profilePic)=>{
@@ -27,14 +29,20 @@ io.on("connection",socket=>{
         };
         rooms.get(room).push(user);
         updateUsersList(room)
-        console.log(rooms)
+    })
+
+    socket.on("start game",(room,musicList)=>{
+        console.log(room, musicList)
+        if (!games.has(room)) {
+            games.set(room, musicList);
+        }
+        console.log(games)
     })
 
     socket.on('disconnecting', () =>{
         for (let key of rooms.keys()) {
             for(let value in rooms.get(key)){
                 if(rooms.get(key)[value].id===socket.id){
-                    console.log(key)
                     io.sockets.to(key).emit('user disconnected');
                     removeUser(key,rooms.get(key)[value])
                     rooms.get(key).splice(value,1)
@@ -47,17 +55,6 @@ io.on("connection",socket=>{
                 }
             }
         }
-        console.log(rooms)
-        /*socket.leave(room)
-        let userList = rooms.get(room)
-        io.sockets.in(room).emit({
-            type: 'status',
-            text: 'disconnected',
-            created: Date.now(),
-        });
-        userList.filter(u=>u.id!==socket.id);
-
-        console.log(rooms)*/
     });
 
     function updateUsersList(room){

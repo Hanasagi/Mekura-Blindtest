@@ -1,0 +1,5 @@
+rootProject.name = 'mekura'
+
+include 'api'
+
+include 'website'

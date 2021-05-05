@@ -19,6 +19,10 @@ class MusicService {
                 return axios.put(BASE_URL + '/' + entryId, entry);
         }
 
+        getRandomEntryByType(entry:any){
+                return axios.post(BASE_URL+'/search',{headers:{ "Content-Type": "application/x-www-form-urlencoded"},entry})
+        }
+
         deleteEntry(entryId:number){
                 return axios.delete<number>(BASE_URL + '/' + entryId);
         }

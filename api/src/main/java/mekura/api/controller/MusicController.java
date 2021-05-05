@@ -51,6 +51,17 @@ public class MusicController {
         return ResponseEntity.ok(entry);
     }
 
+    @PostMapping("/search")
+    public ResponseEntity < List<MusicDTO> > getEntryByTypeRandom(@RequestBody String type) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode nameObj = mapper.readTree(type);
+        String n = nameObj.at("/entry").toString();
+        List<MusicDTO> entry = musicService.findByTypeRandom(n);
+        if (entry == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(entry);
+    }
+
     // update user rest api
 
     @PutMapping("/{id}")

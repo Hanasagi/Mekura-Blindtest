@@ -1,18 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {io} from "socket.io-client";
-import './Test.scss'
+import './Test.scss';
+import MusicService from "../Services/MusicService";
 
 export default function Test(){
-
+    const initialFormData = Object.freeze({
+        type: "",
+    });
+    const [formData, updateFormData] = useState(initialFormData);
+    const socket = io(window.location.hostname+":4001", {transports: ['websocket'], reconnection: true, rejectUnauthorized: false })
     useEffect(() => {
         const connectSocket=async()=>{
-            const socket = io(window.location.hostname+":4001", {transports: ['websocket'], reconnection: true, rejectUnauthorized: false })
+
             let user = JSON.parse(localStorage.getItem("user")!)
             socket.on("connect", function () {
                 console.log("connected: " + socket.id);
             });
+            socket.on("error",(e)=>{
+                console.log(e)
+            })
             socket.on("list users",(user)=>{
                 usertoDiv(user)
+            })
+            socket.on("add player",(musicList)=>{
+                console.log(musicList)
             })
             socket.on("remove user",(user)=>{
                 let userDiv = evaluateXPath(`//div[@class='Test']/div/div[@class='${user.user.username}']`)!
@@ -36,6 +47,15 @@ export default function Test(){
         connectSocket()
     },[])
 
+
+    const handleChange = (e: any) => {
+        updateFormData({
+            ...formData,
+
+            // Trimming any whitespace
+            [e.target.name]: e.target.value.trim()
+        });
+    };
     let usertoDiv=(user:any)=>{
         let userDiv=document.querySelectorAll(".Test > div > div")
         let j=0;
@@ -65,7 +85,19 @@ export default function Test(){
     let evaluateXPath=(xpath:string)=>{
         return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     }
+    let fetchMusic=(e:any)=>{
+        e.preventDefault()
+        MusicService.getRandomEntryByType(formData.type).then((r:any)=>{
+            console.log(r)
+            socket.emit("start game", window.location.href, r.data)
+
+        }).catch(e=>{console.error(e)})
+    }
     return(
+        <div>
+            <form onSubmit={fetchMusic}><input onChange={handleChange} type="text" name="type"/>
+                <button type="submit">Submit</button>
+            </form>
         <div className="Test">{window.location.hash}
             <div className="P1">Test</div>
             <div className="P2">Test</div>
@@ -75,6 +107,7 @@ export default function Test(){
             <div className="P6">Test</div>
             <div className="P7">Test</div>
             <div className="P8">Test</div>
+        </div>
         </div>
     )
 }
