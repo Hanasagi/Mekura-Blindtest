@@ -41,10 +41,10 @@ class Home extends Component {
         <div className="App">
         <a
           className="App-link"
-          href="https://discord.com/api/oauth2/authorize?client_id=817438308823990312&redirect_uri=http%3A%2F%2F172.17.89.177%3A3000%2Fredirect&response_type=code&scope=identify%20guilds"
+          href="https://discord.com/api/oauth2/authorize?client_id=817438308823990312&redirect_uri=http%3A%2F%2Flocalhost%3A80%2Fredirect&response_type=code&scope=identify%20guilds"
           rel="noopener noreferrer"
         >
-          Log in
+          Chgibre
         </a>
     </div>
       ) 

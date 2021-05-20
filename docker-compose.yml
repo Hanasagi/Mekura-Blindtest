@@ -24,6 +24,8 @@ services:
       - 8086:80
     environment:
       - PMA_ARBITRARY=1
+    depends_on:
+      - db
   # App backend service
   server:
     # Configuration for building the docker image for the backend service
@@ -39,6 +41,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 
+    volumes:
+      - /app:/blindtest/api
   # Frontend Service
   client:
     build:
@@ -49,7 +53,8 @@ services:
     restart: always
     depends_on:
       - server
-
+    volumes:
+      - ./:/blindtest/website
   # Database Service (Mysql)
 # Define Volumes to be created
 volumes:
