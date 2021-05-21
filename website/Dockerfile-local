@@ -1,0 +1,10 @@
+FROM node:12.4.0-alpine as build
+WORKDIR /website
+RUN ["mkdir", "-p" ,"/app"]
+COPY . ./
+RUN yarn 
+
+
+EXPOSE 80
+
+CMD [ "npm", "start" ]

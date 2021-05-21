@@ -31,7 +31,7 @@ services:
     # Configuration for building the docker image for the backend service
     build:
       context: api # Use an image built from the specified dockerfile in the `app-server` directory.
-      dockerfile: "./Dockerfile-local" # Specify the Dockerfile path
+      dockerfile: "./Dockerfile" # Specify the Dockerfile path
     ports:
       - "8090:8090" # Forward the exposed port 8080 on the container (docker) to port 8080 on the host machine
     restart: always
@@ -41,18 +41,20 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 
+    volumes:
+      - /app:/blindtest/api
   # Frontend Service
   client:
     build:
       context: website # Use an image built from the specified dockerfile in the `app-client` directory.
-      dockerfile: "./Dockerfile-local" # Specify the Dockerfile path
+      dockerfile: "./Dockerfile" # Specify the Dockerfile path
     ports:
       - "80:80" # Map the exposed port 80 on the container to port 80 on the host machine
     restart: always
     depends_on:
       - server
     volumes:
-      - /blindtest/website:/app
+      - ./:/blindtest/website
   # Database Service (Mysql)
 # Define Volumes to be created
 volumes:

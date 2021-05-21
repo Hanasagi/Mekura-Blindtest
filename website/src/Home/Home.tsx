@@ -44,7 +44,8 @@ class Home extends Component {
           href="https://discord.com/api/oauth2/authorize?client_id=817438308823990312&redirect_uri=http%3A%2F%2Flocalhost%3A80%2Fredirect&response_type=code&scope=identify%20guilds"
           rel="noopener noreferrer"
         >
-          Chgibre
+          Chgibrazazazae
+          <p></p>
         </a>
     </div>
       ) 
